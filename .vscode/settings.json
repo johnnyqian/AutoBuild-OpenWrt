@@ -1,0 +1,34 @@
+{
+    "cSpell.ignoreWords": [
+        "autoconf",
+        "automake",
+        "autopoint",
+        "autoremove",
+        "binutils",
+        "bzip",
+        "defconfig",
+        "gettext",
+        "hhvm",
+        "libc",
+        "libelf",
+        "libglib",
+        "libncurses",
+        "libssl",
+        "libtool",
+        "libuv",
+        "llvm",
+        "msmtp",
+        "multilib",
+        "noninteractive",
+        "nproc",
+        "roang",
+        "texinfo",
+        "xmlto"
+    ],
+    "cSpell.words": [
+        "chmod",
+        "openjdk",
+        "openwrt",
+        "qemu"
+    ]
+}

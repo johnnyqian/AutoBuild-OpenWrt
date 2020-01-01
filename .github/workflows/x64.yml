@@ -1,30 +1,29 @@
 #=================================================
 # Description: Build OpenWrt using GitHub Actions
-# Lisence: MIT
+# License: MIT
 # Author: eSirPlayground
-# Youtube Channel: https://goo.gl/fvkdwm 
+# YouTube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_x86
+name: OpenWrt-x64-CI-CD
 
 on: 
   release:
     types: [published]
 
-  #push:
-  #  branches: 
-  #    - master
+  push:
+    branches: 
+      - master
 
   #schedule:
   #  - cron: 0 8 * * 5
-
+  
   #watch:
   #  types: [started]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout
       uses: actions/checkout@master
@@ -59,7 +58,7 @@ jobs:
 
     - name: Clone source code
       env: 
-        REPO_URL: https://github.com/coolsnowwolf/lede
+        REPO_URL: https://github.com/johnnyqian/lede
         REPO_BRANCH: master
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
@@ -70,14 +69,14 @@ jobs:
         ./scripts/feeds install -a
         ./scripts/feeds install -a
 
-    - name: Configuration Customization - Build_x86
+    - name: Configuration Customization
       env:
-        CONFIG_FILE: 'x86.config'
+        CONFIG_FILE: 'x64.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
-        
+
     - name: Download package
       working-directory: ./openwrt
       run: |
@@ -91,8 +90,24 @@ jobs:
         echo -e "$(nproc) thread build."
         make -j$(nproc) V=s
 
-    - name : Upload artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
         name: OpenWrt
         path: openwrt/bin
+
+#   release:
+#     runs-on: ubuntu-latest
+#     needs: [build]
+#     steps:
+#     - uses: actions/checkout@master
+#     - name: Create release
+#       uses: Roang-zero1/github-create-release-action@master
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#     - name: Upload release
+#       uses: Roang-zero1/github-upload-release-artifacts-action@master
+#       with:
+#         args: openwrt/bin/
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
